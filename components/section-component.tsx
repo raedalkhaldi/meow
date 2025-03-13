@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import type { Section, Subsection } from "@/lib/types"
-import SubsectionComponent from "./subsection-component"
-import AddSubsectionForm from "./add-subsection-form"
-import { ChevronDown, ChevronUp, PlusCircle, Trash2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import type { Section } from "@/lib/types"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Edit, Trash2 } from "lucide-react"
 
 interface SectionComponentProps {
   section: Section
@@ -12,95 +12,120 @@ interface SectionComponentProps {
   onDeleteSection: (sectionId: string) => void
 }
 
-export default function SectionComponent({ section, onUpdateSection, onDeleteSection }: SectionComponentProps) {
-  const [isExpanded, setIsExpanded] = useState(true)
-  const [showAddSubsection, setShowAddSubsection] = useState(false)
+export default function SectionComponent({
+  section,
+  onUpdateSection,
+  onDeleteSection,
+}: SectionComponentProps) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedTitle, setEditedTitle] = useState(section.title)
+  const [editedDescription, setEditedDescription] = useState(section.description)
 
-  const handleAddSubsection = (newSubsection: Subsection) => {
-    const updatedSection = {
+  const handleSave = () => {
+    onUpdateSection({
       ...section,
-      subsections: [...section.subsections, newSubsection],
-    }
-    onUpdateSection(updatedSection)
-    setShowAddSubsection(false)
+      title: editedTitle,
+      description: editedDescription,
+    })
+    setIsEditing(false)
   }
 
-  const handleUpdateSubsection = (updatedSubsection: Subsection) => {
-    const updatedSection = {
-      ...section,
-      subsections: section.subsections.map((subsection) =>
-        subsection.id === updatedSubsection.id ? updatedSubsection : subsection,
-      ),
-    }
-    onUpdateSection(updatedSection)
-  }
-
-  const handleDeleteSubsection = (subsectionId: string) => {
-    const updatedSection = {
-      ...section,
-      subsections: section.subsections.filter((subsection) => subsection.id !== subsectionId),
-    }
-    onUpdateSection(updatedSection)
+  const handleCancel = () => {
+    setEditedTitle(section.title)
+    setEditedDescription(section.description)
+    setIsEditing(false)
   }
 
   return (
-    <div className="neumorphic-container p-5 rounded-xl">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
-          {isExpanded ? (
-            <ChevronUp size={20} className="text-gray-600" />
-          ) : (
-            <ChevronDown size={20} className="text-gray-600" />
-          )}
-          <h4 className="text-lg font-semibold text-gray-800">{section.name}</h4>
+    <Card className="w-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        {isEditing ? (
+          <div className="space-y-4 w-full">
+            <div>
+              <label htmlFor={`title-${section.id}`} className="block text-sm font-medium text-gray-700 mb-1">
+                Title
+              </label>
+              <input
+                type="text"
+                id={`title-${section.id}`}
+                value={editedTitle}
+                onChange={(e) => setEditedTitle(e.target.value)}
+                className="w-full p-2 border rounded-md"
+              />
+            </div>
+            <div>
+              <label htmlFor={`description-${section.id}`} className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
+              <textarea
+                id={`description-${section.id}`}
+                value={editedDescription}
+                onChange={(e) => setEditedDescription(e.target.value)}
+                className="w-full p-2 border rounded-md"
+                rows={3}
+              />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave}>Save</Button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div>
+              <h3 className="font-semibold">{section.title}</h3>
+              <p className="text-sm text-gray-500">{section.description}</p>
+            </div>
+            <div className="flex space-x-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsEditing(true)}
+                className="h-8 w-8 p-0"
+                aria-label="Edit section"
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onDeleteSection(section.id)}
+                className="h-8 w-8 p-0"
+                aria-label="Delete section"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </>
+        )}
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-4">
+          <div className="flex items-center">
+            <span className="text-sm font-medium">Status:</span>
+            <span className="ml-2 text-sm">{section.status}</span>
+          </div>
+          <div className="flex items-center">
+            <span className="text-sm font-medium">Priority:</span>
+            <span className="ml-2 text-sm">{section.priority}</span>
+          </div>
+          <div className="flex items-center">
+            <span className="text-sm font-medium">Progress:</span>
+            <span className="ml-2 text-sm">{section.progress}%</span>
+          </div>
+          <div className="flex items-center">
+            <span className="text-sm font-medium">Start Date:</span>
+            <span className="ml-2 text-sm">{section.startDate}</span>
+          </div>
+          <div className="flex items-center">
+            <span className="text-sm font-medium">End Date:</span>
+            <span className="ml-2 text-sm">{section.endDate}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          {!showAddSubsection && (
-            <button
-              onClick={() => setShowAddSubsection(true)}
-              className="neumorphic-button-small p-2 rounded-lg text-gray-600"
-              aria-label="Add subsection"
-            >
-              <PlusCircle size={18} />
-            </button>
-          )}
-          <button
-            onClick={() => onDeleteSection(section.id)}
-            className="neumorphic-button-small p-2 rounded-lg text-gray-600 hover:text-red-500"
-            aria-label="Delete section"
-          >
-            <Trash2 size={18} />
-          </button>
-        </div>
-      </div>
-
-      {isExpanded && (
-        <>
-          {showAddSubsection && (
-            <div className="mb-4">
-              <AddSubsectionForm onAdd={handleAddSubsection} onCancel={() => setShowAddSubsection(false)} />
-            </div>
-          )}
-
-          {section.subsections.length === 0 && !showAddSubsection ? (
-            <div className="text-center py-4 text-gray-500 neumorphic-inset p-4 rounded-lg">
-              No subsections yet. Add your first subsection!
-            </div>
-          ) : (
-            <div className="space-y-3 pl-2">
-              {section.subsections.map((subsection) => (
-                <SubsectionComponent
-                  key={subsection.id}
-                  subsection={subsection}
-                  onUpdateSubsection={handleUpdateSubsection}
-                  onDeleteSubsection={handleDeleteSubsection}
-                />
-              ))}
-            </div>
-          )}
-        </>
-      )}
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 
