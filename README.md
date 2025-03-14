@@ -53,4 +53,7 @@ npm run build
 
 - `/app` - Next.js app router pages and API routes
 - `/components` - React components
-- `/lib` - Utility functions and type definitions 
+- `/lib` - Utility functions and type definitions
+
+## Updated
+Last updated: March 14, 2025 
