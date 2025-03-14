@@ -85,6 +85,7 @@ export default function ProjectDashboard() {
             onEdit={() => {
               setEditingProject(selectedProject)
               setShowAddForm(true)
+              setSelectedProject(null)
             }}
             onDelete={() => {
               if (window.confirm("Are you sure you want to delete this project?")) {

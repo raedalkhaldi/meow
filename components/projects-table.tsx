@@ -134,7 +134,10 @@ export function ProjectsTable({ projects, onViewDetails, onEdit, onDelete, viewM
                     <Button
                       variant="ghost"
                       className="flex-1 rounded-none py-2 h-10 border-l"
-                      onClick={() => onEdit(project)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent event bubbling
+                        onEdit(project);
+                      }}
                     >
                       <Edit className="h-4 w-4 mr-1" /> Edit
                     </Button>
@@ -251,7 +254,10 @@ export function ProjectsTable({ projects, onViewDetails, onEdit, onDelete, viewM
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => onEdit(project)}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent event bubbling
+                          onEdit(project);
+                        }}
                         className="neumorphic-button-small"
                       >
                         <Edit className="h-4 w-4" />
@@ -313,7 +319,10 @@ export function ProjectsTable({ projects, onViewDetails, onEdit, onDelete, viewM
                   <Button
                     variant="ghost"
                     className="flex-1 rounded-none py-2 h-10 border-l"
-                    onClick={() => onEdit(project)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent event bubbling
+                      onEdit(project);
+                    }}
                   >
                     <Edit className="h-4 w-4 mr-1" /> Edit
                   </Button>
