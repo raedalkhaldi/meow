@@ -19,6 +19,28 @@ export const mockProjects: Project[] = [
     currentStatus: "Construction phase 2 of 4. Bridge foundations complete, starting deck work next month.",
     nextSteps:
       "Complete environmental impact assessment for phase 3. Finalize land acquisition for remaining sections.",
+    sections: [
+      {
+        id: "sec-001",
+        title: "Environmental Assessment",
+        description: "Complete environmental impact studies and obtain necessary approvals.",
+        status: "in-progress",
+        priority: "high",
+        startDate: "2024-01-01",
+        endDate: "2024-06-30",
+        progress: 65
+      },
+      {
+        id: "sec-002",
+        title: "Land Acquisition",
+        description: "Acquire necessary land parcels for project expansion.",
+        status: "todo",
+        priority: "high",
+        startDate: "2024-03-01",
+        endDate: "2024-12-31",
+        progress: 30
+      }
+    ]
   },
   {
     id: "proj-002",
@@ -38,6 +60,28 @@ export const mockProjects: Project[] = [
       "Complete modernization of the city's main hospital including new emergency department, surgical wing, and patient tower.",
     currentStatus: "Design phase complete. Preparing tender documents for construction contract.",
     nextSteps: "Issue RFP for construction by end of quarter. Finalize financing structure with Treasury.",
+    sections: [
+      {
+        id: "sec-003",
+        title: "Design Phase",
+        description: "Complete architectural and engineering designs.",
+        status: "done",
+        priority: "high",
+        startDate: "2023-09-01",
+        endDate: "2024-02-28",
+        progress: 100
+      },
+      {
+        id: "sec-004",
+        title: "Tender Preparation",
+        description: "Prepare and issue tender documents for construction.",
+        status: "in-progress",
+        priority: "medium",
+        startDate: "2024-02-01",
+        endDate: "2024-05-31",
+        progress: 75
+      }
+    ]
   },
   {
     id: "proj-003",
@@ -57,6 +101,18 @@ export const mockProjects: Project[] = [
       "Integration of solar and wind energy sources into the main power grid with new transmission lines and storage facilities.",
     currentStatus: "Project temporarily on hold pending resolution of land use disputes with local communities.",
     nextSteps: "Resume community consultations. Revise project timeline once disputes are resolved.",
+    sections: [
+      {
+        id: "sec-005",
+        title: "Community Consultation",
+        description: "Engage with local communities to resolve land use disputes.",
+        status: "in-progress",
+        priority: "high",
+        startDate: "2024-01-15",
+        endDate: "2024-07-31",
+        progress: 40
+      }
+    ]
   },
   {
     id: "proj-004",
@@ -75,6 +131,28 @@ export const mockProjects: Project[] = [
     summary: "Extension of the city's metro line with 8 new stations and connection to the airport.",
     currentStatus: "Tunneling work 60% complete. Station construction started at 3 locations.",
     nextSteps: "Begin procurement of rolling stock. Finalize signaling system integration plan.",
+    sections: [
+      {
+        id: "sec-006",
+        title: "Tunneling Works",
+        description: "Complete tunnel boring and structural work.",
+        status: "in-progress",
+        priority: "high",
+        startDate: "2023-06-01",
+        endDate: "2024-12-31",
+        progress: 60
+      },
+      {
+        id: "sec-007",
+        title: "Station Construction",
+        description: "Build and fit out new metro stations.",
+        status: "in-progress",
+        priority: "high",
+        startDate: "2023-09-01",
+        endDate: "2025-03-31",
+        progress: 35
+      }
+    ]
   },
   {
     id: "proj-005",
@@ -93,6 +171,18 @@ export const mockProjects: Project[] = [
     summary: "Construction of a new water treatment facility with capacity to serve 500,000 residents.",
     currentStatus: "Project completed and facility operational. Performance exceeding targets by 5%.",
     nextSteps: "Conduct 1-year performance review. Consider expansion options for phase 2.",
+    sections: [
+      {
+        id: "sec-008",
+        title: "Performance Review",
+        description: "Conduct comprehensive performance assessment.",
+        status: "todo",
+        priority: "medium",
+        startDate: "2024-06-01",
+        endDate: "2024-08-31",
+        progress: 0
+      }
+    ]
   },
   {
     id: "proj-006",
@@ -112,6 +202,28 @@ export const mockProjects: Project[] = [
       "Implementation of smart city technologies including traffic management, public WiFi, and IoT sensors for environmental monitoring.",
     currentStatus: "Finalizing technical specifications. Pilot project in downtown area showing promising results.",
     nextSteps: "Complete vendor selection process. Develop phased implementation plan for citywide rollout.",
+    sections: [
+      {
+        id: "sec-009",
+        title: "Vendor Selection",
+        description: "Evaluate and select technology vendors.",
+        status: "in-progress",
+        priority: "high",
+        startDate: "2024-02-01",
+        endDate: "2024-05-31",
+        progress: 80
+      },
+      {
+        id: "sec-010",
+        title: "Implementation Planning",
+        description: "Develop detailed citywide rollout plan.",
+        status: "todo",
+        priority: "medium",
+        startDate: "2024-04-01",
+        endDate: "2024-07-31",
+        progress: 15
+      }
+    ]
   },
 ]
 

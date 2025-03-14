@@ -16,7 +16,7 @@ export async function getProjects(): Promise<Project[]> {
   try {
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Sheet1!A2:P', // A to P for 16 columns
+      range: 'Sheet1!A2:Q', // A to Q for 17 columns (added stage)
     });
 
     const rows = response.data.values;
@@ -27,18 +27,19 @@ export async function getProjects(): Promise<Project[]> {
       name: row[1] || '',
       lead: row[2] || '',
       entity: row[3] || '',
-      status: row[4] || '',
-      governmentCommitment: Number(row[5]) || 0,
-      avgAvailabilityPayment: Number(row[6]) || 0,
-      capex: Number(row[7]) || 0,
-      opex: Number(row[8]) || 0,
-      vfm: Number(row[9]) || 0,
-      discountRate: Number(row[10]) || 0,
-      equityIrr: Number(row[11]) || 0,
-      contractLength: Number(row[12]) || 0,
+      stage: row[4] || 'Planning',
+      governmentCommitment: String(row[5] || '0'),
+      avgAvailabilityPayment: String(row[6] || '0'),
+      capex: String(row[7] || '0'),
+      opex: String(row[8] || '0'),
+      vfm: String(row[9] || '0'),
+      discountRate: String(row[10] || '0'),
+      equityIrr: String(row[11] || '0'),
+      contractLength: String(row[12] || '0'),
       summary: row[13] || '',
       currentStatus: row[14] || '',
-      nextSteps: row[15] || ''
+      nextSteps: row[15] || '',
+      sections: [] // Initialize with empty sections array
     }));
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -50,7 +51,7 @@ export async function addProject(project: Project): Promise<boolean> {
   try {
     await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Sheet1!A:P',
+      range: 'Sheet1!A:Q',
       valueInputOption: 'RAW',
       requestBody: {
         values: [[
@@ -58,7 +59,7 @@ export async function addProject(project: Project): Promise<boolean> {
           project.name,
           project.lead,
           project.entity,
-          project.status,
+          project.stage,
           project.governmentCommitment,
           project.avgAvailabilityPayment,
           project.capex,
@@ -95,7 +96,7 @@ export async function updateProject(project: Project): Promise<boolean> {
 
     await sheets.spreadsheets.values.update({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: `Sheet1!A${rowIndex + 1}:P${rowIndex + 1}`,
+      range: `Sheet1!A${rowIndex + 1}:Q${rowIndex + 1}`,
       valueInputOption: 'RAW',
       requestBody: {
         values: [[
@@ -103,7 +104,7 @@ export async function updateProject(project: Project): Promise<boolean> {
           project.name,
           project.lead,
           project.entity,
-          project.status,
+          project.stage,
           project.governmentCommitment,
           project.avgAvailabilityPayment,
           project.capex,
@@ -140,7 +141,7 @@ export async function deleteProject(projectId: string): Promise<boolean> {
 
     await sheets.spreadsheets.values.clear({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: `Sheet1!A${rowIndex + 1}:P${rowIndex + 1}`,
+      range: `Sheet1!A${rowIndex + 1}:Q${rowIndex + 1}`,
     });
     return true;
   } catch (error) {
