@@ -19,7 +19,7 @@ export default function ProjectDashboard() {
   const [filterStatus, setFilterStatus] = useState<string | null>(null)
   const [filterEntity, setFilterEntity] = useState<string | null>(null)
   const [filterLead, setFilterLead] = useState<string | null>(null)
-  const [viewMode, setViewMode] = useState<"table" | "grid">("table")
+  const [viewMode, setViewMode] = useState<"table" | "grid">("grid")
 
   // Filter projects based on search and filters
   const filteredProjects = projects.filter((project) => {
