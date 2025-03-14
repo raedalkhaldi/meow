@@ -60,7 +60,7 @@ export function SearchAndFilter({
 
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <div className="relative flex-1 max-w-md">
+      <div className="relative flex-1 max-w-full md:max-w-md">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="search"
@@ -70,7 +70,7 @@ export function SearchAndFilter({
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="neumorphic-button">

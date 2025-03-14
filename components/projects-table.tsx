@@ -178,128 +178,158 @@ export function ProjectsTable({ projects, onViewDetails, onEdit, onDelete, viewM
 
   return (
     <>
-      <div className="rounded-md neumorphic-container">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => requestSort("name")}
-                  className="flex items-center gap-1 p-0 font-medium"
-                >
-                  Project Name
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => requestSort("lead")}
-                  className="flex items-center gap-1 p-0 font-medium"
-                >
-                  Lead
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => requestSort("entity")}
-                  className="flex items-center gap-1 p-0 font-medium"
-                >
-                  Entity
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => requestSort("stage")}
-                  className="flex items-center gap-1 p-0 font-medium"
-                >
-                  Stage
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => requestSort("capex")}
-                  className="flex items-center gap-1 p-0 font-medium"
-                >
-                  CAPEX
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => requestSort("contractLength")}
-                  className="flex items-center gap-1 p-0 font-medium"
-                >
-                  Contract Length
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
-                </Button>
-              </TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedProjects.length === 0 ? (
+      {viewMode === "table" ? (
+        <div className="rounded-md border neumorphic-container overflow-hidden">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={7} className="text-center">
-                  No projects found.
-                </TableCell>
+                <TableHead className="w-[200px]">
+                  <Button variant="ghost" onClick={() => requestSort("name")} className="flex items-center">
+                    Name
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TableHead>
+                <TableHead className="hidden md:table-cell">
+                  <Button variant="ghost" onClick={() => requestSort("lead")} className="flex items-center">
+                    Lead
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TableHead>
+                <TableHead className="hidden md:table-cell">
+                  <Button variant="ghost" onClick={() => requestSort("entity")} className="flex items-center">
+                    Entity
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TableHead>
+                <TableHead className="hidden md:table-cell">
+                  <Button variant="ghost" onClick={() => requestSort("stage")} className="flex items-center">
+                    Status
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TableHead>
+                <TableHead className="hidden lg:table-cell">
+                  <Button variant="ghost" onClick={() => requestSort("capex")} className="flex items-center">
+                    CAPEX
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TableHead>
+                <TableHead className="hidden lg:table-cell">
+                  <Button
+                    variant="ghost"
+                    onClick={() => requestSort("contractLength")}
+                    className="flex items-center"
+                  >
+                    Contract Length
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ) : (
-              sortedProjects.map((project) => (
+            </TableHeader>
+            <TableBody>
+              {sortedProjects.map((project) => (
                 <TableRow key={project.id}>
                   <TableCell className="font-medium">{project.name}</TableCell>
-                  <TableCell>{project.lead}</TableCell>
-                  <TableCell>{project.entity}</TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell">{project.lead}</TableCell>
+                  <TableCell className="hidden md:table-cell">{project.entity}</TableCell>
+                  <TableCell className="hidden md:table-cell">
                     <Badge className={`${getStageColor(project.stage)}`}>{project.stage}</Badge>
                   </TableCell>
-                  <TableCell>{formatCurrency(Number(project.capex))}</TableCell>
-                  <TableCell>{project.contractLength} years</TableCell>
+                  <TableCell className="hidden lg:table-cell">{formatCurrency(Number(project.capex))}</TableCell>
+                  <TableCell className="hidden lg:table-cell">{project.contractLength} years</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => onViewDetails(project)}
-                        className="h-8 w-8 p-0 neumorphic-button-small"
+                        className="neumorphic-button-small"
                       >
                         <Eye className="h-4 w-4" />
-                        <span className="sr-only">View details</span>
+                        <span className="sr-only md:not-sr-only md:ml-2">View</span>
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => onEdit(project)}
-                        className="h-8 w-8 p-0 neumorphic-button-small"
+                        className="neumorphic-button-small"
                       >
                         <Edit className="h-4 w-4" />
-                        <span className="sr-only">Edit</span>
+                        <span className="sr-only md:not-sr-only md:ml-2">Edit</span>
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={(e) => handleDelete(project, e)}
-                        className="h-8 w-8 p-0 neumorphic-button-small text-destructive hover:text-destructive"
+                        className="neumorphic-button-small text-destructive hover:text-destructive"
                       >
                         <Trash2 className="h-4 w-4" />
-                        <span className="sr-only">Delete</span>
+                        <span className="sr-only md:not-sr-only md:ml-2">Delete</span>
                       </Button>
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {sortedProjects.map((project) => (
+            <Card key={project.id} className="neumorphic-container overflow-hidden">
+              <CardContent className="p-0">
+                <div className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-semibold text-lg truncate">{project.name}</h3>
+                    <Badge className={`${getStageColor(project.stage)}`}>{project.stage}</Badge>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Lead:</span>
+                      <span className="font-medium">{project.lead}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Entity:</span>
+                      <span className="font-medium">{project.entity}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">CAPEX:</span>
+                      <span className="font-medium">{formatCurrency(Number(project.capex))}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Contract:</span>
+                      <span className="font-medium">{project.contractLength} years</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex border-t">
+                  <Button
+                    variant="ghost"
+                    className="flex-1 rounded-none py-2 h-10"
+                    onClick={() => onViewDetails(project)}
+                  >
+                    <Eye className="h-4 w-4 mr-1" /> View
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="flex-1 rounded-none py-2 h-10 border-l"
+                    onClick={() => onEdit(project)}
+                  >
+                    <Edit className="h-4 w-4 mr-1" /> Edit
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="flex-1 rounded-none py-2 h-10 border-l text-destructive hover:text-destructive"
+                    onClick={(e) => handleDelete(project, e)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" /> Delete
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       <AlertDialog open={!!projectToDelete} onOpenChange={(open) => !open && setProjectToDelete(null)}>
         <AlertDialogContent>

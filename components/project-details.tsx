@@ -90,8 +90,8 @@ export function ProjectDetails({ project, onBack, onEdit, onDelete }: ProjectDet
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-2">
           <Button variant="outline" size="sm" onClick={onBack} className="neumorphic-button">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Projects
@@ -106,7 +106,7 @@ export function ProjectDetails({ project, onBack, onEdit, onDelete }: ProjectDet
             {showNewCard ? "Hide Card Form" : "Add New Card"}
           </Button>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={onEdit} className="neumorphic-button">
             <Edit className="mr-2 h-4 w-4" />
             Edit Project
@@ -133,7 +133,7 @@ export function ProjectDetails({ project, onBack, onEdit, onDelete }: ProjectDet
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <h3 className="text-sm font-medium text-muted-foreground">Project Name</h3>
                   <p className="text-base">{project.name}</p>
@@ -165,7 +165,7 @@ export function ProjectDetails({ project, onBack, onEdit, onDelete }: ProjectDet
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <h3 className="text-sm font-medium text-muted-foreground">Government Commitment</h3>
                   <p className="text-base">{safeFormatCurrency(project.governmentCommitment)}</p>

@@ -47,7 +47,7 @@ export default function ProjectDashboard() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <h1 className="text-2xl font-bold tracking-tight">Projects</h1>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               onClick={() => {
                 setShowAddForm(true)
@@ -78,39 +78,49 @@ export default function ProjectDashboard() {
           setViewMode={setViewMode}
         />
 
-        {showAddForm ? (
-          <AddProjectForm 
-            onAdd={(project) => {
-              addProject(project)
-              setShowAddForm(false)
-            }} 
-            onCancel={() => setShowAddForm(false)} 
-          />
-        ) : editingProject ? (
-          <AddProjectForm 
-            project={editingProject} 
-            onAdd={(project) => {
-              updateProject(project)
-              setEditingProject(null)
-            }} 
-            onCancel={() => setEditingProject(null)} 
-            isEditing 
-          />
-        ) : selectedProject ? (
+        {selectedProject ? (
           <ProjectDetails
             project={selectedProject}
             onBack={() => setSelectedProject(null)}
-            onEdit={() => setEditingProject(selectedProject)}
-            onDelete={() => deleteProject(selectedProject.id)}
+            onEdit={() => {
+              setEditingProject(selectedProject)
+              setShowAddForm(true)
+            }}
+            onDelete={() => {
+              if (window.confirm("Are you sure you want to delete this project?")) {
+                deleteProject(selectedProject.id)
+                setSelectedProject(null)
+              }
+            }}
+          />
+        ) : showAddForm ? (
+          <AddProjectForm
+            onCancel={() => {
+              setShowAddForm(false)
+              setEditingProject(null)
+            }}
+            onAdd={(project: Project) => {
+              if (editingProject) {
+                updateProject({ ...project, id: editingProject.id })
+              } else {
+                addProject(project)
+              }
+              setShowAddForm(false)
+              setEditingProject(null)
+            }}
+            project={editingProject || undefined}
+            isEditing={!!editingProject}
           />
         ) : (
-          <ProjectsTable
-            projects={filteredProjects}
-            onViewDetails={setSelectedProject}
-            onEdit={setEditingProject}
-            onDelete={deleteProject}
-            viewMode={viewMode}
-          />
+          <div className="overflow-x-auto">
+            <ProjectsTable
+              projects={filteredProjects}
+              onViewDetails={setSelectedProject}
+              onEdit={setEditingProject}
+              onDelete={deleteProject}
+              viewMode={viewMode}
+            />
+          </div>
         )}
       </div>
     </DashboardShell>
