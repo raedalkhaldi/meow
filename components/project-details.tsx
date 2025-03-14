@@ -58,8 +58,12 @@ export function ProjectDetails({ project, onBack, onEdit, onDelete }: ProjectDet
         updatedProject[element.key] = element.value;
       });
       
+      console.log('Saving custom card with elements:', customElements);
+      console.log('Updated project object:', updatedProject);
+      
       // Update the project in Google Sheets
       const success = await updateProject(updatedProject);
+      console.log('Update project result:', success);
       
       if (success) {
         toast({
