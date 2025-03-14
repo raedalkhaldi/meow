@@ -7,6 +7,8 @@ import { ArrowLeft, Edit, Plus, Trash2 } from "lucide-react"
 import { formatCurrency } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
+import { updateProject } from "@/lib/google-sheets-client"
+import { useToast } from "@/hooks/use-toast"
 
 const safeFormatCurrency = (value: string): string => {
   const number = parseFloat(value);
@@ -42,6 +44,45 @@ export function ProjectDetails({ project, onBack, onEdit, onDelete }: ProjectDet
   const [newValue, setNewValue] = useState("")
   const [cardTitle, setCardTitle] = useState("Custom Card")
   const [editingTitle, setEditingTitle] = useState(false)
+  const { toast } = useToast()
+
+  const saveCustomCard = async () => {
+    try {
+      // Create a copy of the project
+      const updatedProject = { ...project };
+      
+      // Add custom elements as properties to the project
+      customElements.forEach(element => {
+        // Use the element key as the property name
+        // @ts-ignore - We're dynamically adding properties
+        updatedProject[element.key] = element.value;
+      });
+      
+      // Update the project in Google Sheets
+      const success = await updateProject(updatedProject);
+      
+      if (success) {
+        toast({
+          title: "Card saved successfully",
+          description: "The custom card has been added to the project.",
+        });
+        setShowNewCard(false);
+      } else {
+        toast({
+          title: "Failed to save card",
+          description: "There was an error saving the custom card.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error saving custom card:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred while saving the card.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -262,11 +303,7 @@ export function ProjectDetails({ project, onBack, onEdit, onDelete }: ProjectDet
                   variant="default"
                   size="sm"
                   className="neumorphic-button bg-primary text-primary-foreground"
-                  onClick={() => {
-                    // Here you would typically save the card data to your backend
-                    // For now, we'll just close the card form
-                    setShowNewCard(false);
-                  }}
+                  onClick={saveCustomCard}
                 >
                   Save Card
                 </Button>

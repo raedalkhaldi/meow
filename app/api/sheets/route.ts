@@ -344,46 +344,97 @@ async function updateProject(project: Project): Promise<boolean> {
     const rowIndex = projectIndex + 2;
     console.log('Row index for update:', rowIndex);
     
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Sheet1!A${rowIndex}:P${rowIndex}?valueInputOption=USER_ENTERED`;
+    // First, get the current headers
+    const headersUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Sheet1!1:1`;
+    const headersResponse = await fetch(headersUrl, {
+      headers: {
+        Authorization: `Bearer ${(await client.getAccessToken()).token}`,
+      },
+    });
     
-    const values = [
-      [
-        project.id,
-        project.name,
-        project.lead,
-        project.entity,
-        project.stage,
-        project.governmentCommitment,
-        project.avgAvailabilityPayment,
-        project.capex,
-        project.opex,
-        project.vfm,
-        project.discountRate,
-        project.equityIrr,
-        project.contractLength,
-        project.summary,
-        project.currentStatus,
-        project.nextSteps,
-      ],
+    if (!headersResponse.ok) {
+      throw new Error(`Failed to fetch headers: ${headersResponse.statusText}`);
+    }
+    
+    const headersData = await headersResponse.json();
+    const headers = headersData.values[0] || [];
+    console.log('Current headers:', headers);
+    
+    // Check for custom properties in the project that aren't in the standard Project type
+    const standardProps = [
+      'id', 'name', 'lead', 'entity', 'stage', 'governmentCommitment', 
+      'avgAvailabilityPayment', 'capex', 'opex', 'vfm', 'discountRate', 
+      'equityIrr', 'contractLength', 'summary', 'currentStatus', 'nextSteps', 'sections'
     ];
     
-    console.log('Update values:', values);
+    const customProps = Object.keys(project).filter(key => !standardProps.includes(key));
+    console.log('Custom properties:', customProps);
     
-    const response = await fetch(url, {
+    // Check if we need to add new columns for custom properties
+    const newHeaders = [...headers];
+    const newColumns = [];
+    
+    for (const prop of customProps) {
+      if (!headers.includes(prop)) {
+        newHeaders.push(prop);
+        newColumns.push(prop);
+      }
+    }
+    
+    // If we have new columns, update the headers
+    if (newColumns.length > 0) {
+      console.log('Adding new columns:', newColumns);
+      
+      // Update headers row
+      const updateHeadersUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Sheet1!1:1?valueInputOption=USER_ENTERED`;
+      const updateHeadersResponse = await fetch(updateHeadersUrl, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${(await client.getAccessToken()).token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          values: [newHeaders],
+        }),
+      });
+      
+      if (!updateHeadersResponse.ok) {
+        const responseText = await updateHeadersResponse.text();
+        console.error('Update headers response:', responseText);
+        throw new Error(`Failed to update headers: ${updateHeadersResponse.statusText}`);
+      }
+    }
+    
+    // Now prepare the values for the row update
+    // We need to create an array with values for each column in the correct order
+    const rowValues = [];
+    
+    for (const header of newHeaders) {
+      // @ts-ignore - We're accessing dynamic properties
+      rowValues.push(project[header] || '');
+    }
+    
+    // Update the row with all values
+    const updateRowUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Sheet1!A${rowIndex}:${String.fromCharCode(65 + newHeaders.length - 1)}${rowIndex}?valueInputOption=USER_ENTERED`;
+    
+    console.log('Update row URL:', updateRowUrl);
+    console.log('Row values:', rowValues);
+    
+    const updateRowResponse = await fetch(updateRowUrl, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${(await client.getAccessToken()).token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        values,
+        values: [rowValues],
       }),
     });
     
-    if (!response.ok) {
-      const responseText = await response.text();
-      console.error('Update response:', responseText);
-      throw new Error(`Failed to update project: ${response.statusText}`);
+    if (!updateRowResponse.ok) {
+      const responseText = await updateRowResponse.text();
+      console.error('Update row response:', responseText);
+      throw new Error(`Failed to update row: ${updateRowResponse.statusText}`);
     }
     
     return true;
