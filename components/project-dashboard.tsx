@@ -54,7 +54,7 @@ export default function ProjectDashboard() {
                 setSelectedProject(null)
                 setEditingProject(null)
               }}
-              className="neumorphic-button"
+              className="neumorphic-button text-foreground font-medium"
             >
               <Plus className="mr-2 h-4 w-4" />
               Add Project
