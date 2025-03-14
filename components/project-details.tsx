@@ -256,6 +256,21 @@ export function ProjectDetails({ project, onBack, onEdit, onDelete }: ProjectDet
                   Add Element
                 </Button>
               </div>
+              
+              <div className="flex justify-end mt-4">
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="neumorphic-button bg-primary text-primary-foreground"
+                  onClick={() => {
+                    // Here you would typically save the card data to your backend
+                    // For now, we'll just close the card form
+                    setShowNewCard(false);
+                  }}
+                >
+                  Save Card
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
